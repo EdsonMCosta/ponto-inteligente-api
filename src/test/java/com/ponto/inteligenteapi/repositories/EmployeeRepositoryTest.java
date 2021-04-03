@@ -13,10 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * EmployeeRepositoryTest
@@ -40,8 +41,9 @@ public class EmployeeRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        CompanyEntity company = this.companyRepository.save(obtainCompanyData());
-        this.employeeRepository.save(obtainDataOfAEmployee(company));
+        final CompanyEntity company = this.companyRepository.save(obtainCompanyData());
+        final EmployeeEntity employee = obtainDataOfAEmployee(company);
+        this.employeeRepository.save(employee);
     }
 
     @After
@@ -74,17 +76,21 @@ public class EmployeeRepositoryTest {
     public void findEmployeeByEmailOrCPFForInvalidEmail() {
         final EmployeeEntity byCpfAndEmail = this.employeeRepository.findByCpfAndEmail(CPF, "email@invalid.com");
 
-        assertNotNull(byCpfAndEmail);
+        assertNull(byCpfAndEmail);
     }
 
     private EmployeeEntity obtainDataOfAEmployee(CompanyEntity companyEntity) throws NoSuchAlgorithmException {
         EmployeeEntity employeeEntity = new EmployeeEntity();
+        employeeEntity.setId(1L);
         employeeEntity.setName("Jack of All Trade");
         employeeEntity.setProfile(ProfileEnum.USER_ROLE);
         employeeEntity.setPassword(PasswordUtils.generateBCrypt("123456"));
         employeeEntity.setCpf(CPF);
         employeeEntity.setEmail(EMAIL);
+        employeeEntity.setValueHour(BigDecimal.valueOf(100.00));
         employeeEntity.setCompany(companyEntity);
+        employeeEntity.setCreationDate(new Date());
+        employeeEntity.setUpdateDate(new Date());
         return employeeEntity;
     }
 
