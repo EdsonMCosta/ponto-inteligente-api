@@ -44,7 +44,7 @@ public class CompanyRepositoryTest {
 
     @Test
     public void testFindByCNPJ() {
-        final CompanyEntity byCnpj = this.repository.findByCNPJ(CNPJ)
+        final CompanyEntity byCnpj = this.repository.findByCnpj(CNPJ)
                 .orElseThrow(() -> new InvalidCNPJException("Invalid CNPJ."));
 
         assertEquals(CNPJ, byCnpj.getCnpj());

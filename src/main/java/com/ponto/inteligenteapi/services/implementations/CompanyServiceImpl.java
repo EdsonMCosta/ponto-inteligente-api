@@ -18,17 +18,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequiredArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
 
-    private CompanyRepository companyRepository;
+    private final CompanyRepository companyRepository;
 
     @Override
-    public CompanyEntity findByCNPJ(final String cnpj) {
-        return companyRepository.findByCNPJ(cnpj)
+    public CompanyEntity findByCNPJ(String cnpj) {
+        return companyRepository.findByCnpj(cnpj)
                 .orElseThrow(() -> new InvalidCNPJException("Invalid CNPJ."));
     }
 
     @Override
-    public void save(final CompanyEntity companyEntity) {
-        companyRepository.save(companyEntity);
+    public CompanyEntity save(CompanyEntity companyEntity) {
+        return companyRepository.save(companyEntity);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

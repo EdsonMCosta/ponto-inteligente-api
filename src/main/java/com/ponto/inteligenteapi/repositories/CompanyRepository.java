@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface CompanyRepository extends JpaRepository<CompanyEntity, Long> {
 
     @Transactional(readOnly = true)
-    Optional<CompanyEntity> findByCNPJ(String cnpj);
+    Optional<CompanyEntity> findByCnpj(String cnpj);
 
 }

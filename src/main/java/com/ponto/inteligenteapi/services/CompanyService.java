@@ -2,6 +2,8 @@ package com.ponto.inteligenteapi.services;
 
 import com.ponto.inteligenteapi.entities.CompanyEntity;
 
+import java.util.Optional;
+
 /**
  * CompanyServices
  *
@@ -16,11 +18,11 @@ public interface CompanyService {
      * @param cnpj
      * @return Optional<CompanyEntity>
      */
-    CompanyEntity findByCNPJ(final String cnpj);
+    CompanyEntity findByCNPJ(String cnpj);
 
     /**
      * @param companyEntity
      * @return void
      */
-    void save(final CompanyEntity companyEntity);
+    CompanyEntity save(CompanyEntity companyEntity);
 }
