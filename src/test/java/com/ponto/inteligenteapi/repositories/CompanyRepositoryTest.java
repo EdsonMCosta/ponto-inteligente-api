@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static com.ponto.inteligenteapi.services.implementations.CompanyServiceImpl.*;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -43,7 +44,8 @@ public class CompanyRepositoryTest {
 
     @Test
     public void testFindByCNPJ() {
-        final CompanyEntity byCnpj = this.repository.findByCnpj(CNPJ);
+        final CompanyEntity byCnpj = this.repository.findByCnpj(CNPJ)
+                .orElseThrow(() -> new InvalidCNPJException("Invalid CNPJ."));
 
         assertEquals(CNPJ, byCnpj.getCnpj());
     }
