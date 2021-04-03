@@ -2,7 +2,9 @@ package com.ponto.inteligenteapi.repositories;
 
 import com.ponto.inteligenteapi.entities.CompanyEntity;
 import com.ponto.inteligenteapi.entities.EmployeeEntity;
+import com.ponto.inteligenteapi.entities.ReleaseEntity;
 import com.ponto.inteligenteapi.enums.ProfileEnum;
+import com.ponto.inteligenteapi.enums.TypeEnum;
 import com.ponto.inteligenteapi.utils.PasswordUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -10,25 +12,31 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
- * EmployeeRepositoryTest
+ * ReleaseRepositoryTest
  *
  * @author : Edson Costa
- * @since : 02/04/2021
+ * @since : 03/04/2021
  **/
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class EmployeeRepositoryTest {
+public class ReleaseRepositoryTest {
+
+    @Autowired
+    private ReleaseRepository releaseRepository;
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -36,66 +44,55 @@ public class EmployeeRepositoryTest {
     @Autowired
     private CompanyRepository companyRepository;
 
-    private static final String EMAIL = "test@test.com";
-    private static final String CPF = "98765432100";
+    private Long employeeId;
 
     @Before
     public void setUp() throws Exception {
         final CompanyEntity company = this.companyRepository.save(obtainCompanyData());
+
         final EmployeeEntity employee = obtainDataOfAEmployee(company);
         this.employeeRepository.save(employee);
+        this.employeeId = employee.getId();
+
+        this.releaseRepository.save(obtainDataRelease(employee));
+        this.releaseRepository.save(obtainDataRelease(employee));
     }
 
     @After
-    public void cleanAll() {
+    public void cleanAll() throws Exception {
         this.companyRepository.deleteAll();
     }
 
     @Test
-    public void findEmployeeByEmail() {
-        final EmployeeEntity byEmail = this.employeeRepository.findByEmail(EMAIL);
+    public void testFindReleaseByEmployeeId() {
+        final List<ReleaseEntity> byEmployeeId = this.releaseRepository.findByEmployeeId(employeeId);
 
-        assertEquals(EMAIL, byEmail.getEmail());
+        assertEquals(2, byEmployeeId.size());
     }
 
     @Test
-    public void findEmployeeByCPF() {
-        final EmployeeEntity byCpf = this.employeeRepository.findByCpf(CPF);
+    public void testFindReleaseByEmployeeIdPaginated() {
+        final PageRequest pageRequest = new PageRequest(0, 10);
+        final Page<ReleaseEntity> byEmployeeId = this.releaseRepository.findByEmployeeId(employeeId, pageRequest);
 
-        assertEquals(CPF, byCpf.getCpf());
+        assertEquals(2, byEmployeeId.getTotalElements());
     }
 
-    @Test
-    public void findEmployeeByEmailAndCPF() {
-        final EmployeeEntity byCpfAndEmail = this.employeeRepository.findByCpfAndEmail(CPF, EMAIL);
-
-        assertNotNull(byCpfAndEmail);
-    }
-
-    @Test
-    public void findEmployeeByEmailAndCPFForInvalidEmail() {
-        final EmployeeEntity byCpfAndEmail = this.employeeRepository.findByCpfAndEmail(CPF, "email@invalid.com");
-
-        assertNull(byCpfAndEmail);
-    }
-
-    @Test
-    public void findEmployeeByEmailOrCPFForInvalidEmail() {
-        final EmployeeEntity byCpfAndEmail = this.employeeRepository.findByCpfOrEmail(CPF, "email@invalid.com");
-
-        assertNotNull(byCpfAndEmail);
-    }
-
-    @Test
-    public void findEmployeeByEmailOrCPFForInvalidCPF() {
-        final EmployeeEntity byCpfAndEmail = this.employeeRepository.findByCpfOrEmail("12345678900", EMAIL);
-
-        assertNotNull(byCpfAndEmail);
+    private ReleaseEntity obtainDataRelease(EmployeeEntity employeeEntity) {
+        ReleaseEntity releaseEntity = new ReleaseEntity();
+        releaseEntity.setDate(new Date());
+        releaseEntity.setCreationDate(new Date());
+        releaseEntity.setUpdateDate(new Date());
+        releaseEntity.setType(TypeEnum.START_LUNCH);
+        releaseEntity.setEmployee(employeeEntity);
+        return releaseEntity;
     }
 
     private EmployeeEntity obtainDataOfAEmployee(CompanyEntity companyEntity) throws NoSuchAlgorithmException {
+        final String EMAIL = "test@test.com";
+        final String CPF = "98765432100";
+
         EmployeeEntity employeeEntity = new EmployeeEntity();
-        employeeEntity.setId(1L);
         employeeEntity.setName("Jack of All Trade");
         employeeEntity.setProfile(ProfileEnum.USER_ROLE);
         employeeEntity.setPassword(PasswordUtils.generateBCrypt("123456"));

@@ -38,6 +38,7 @@ public class EmployeeEntity implements Serializable {
         return id;
     }
 
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public void setId(Long id) {
         this.id = id;
     }

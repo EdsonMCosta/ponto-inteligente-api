@@ -12,4 +12,6 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Long> 
     EmployeeEntity findByEmail(String email);
 
     EmployeeEntity findByCpfAndEmail(String cpf, String email);
+
+    EmployeeEntity findByCpfOrEmail(String cpf, String email);
 }
