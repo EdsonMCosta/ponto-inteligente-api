@@ -22,7 +22,7 @@ public interface CompanyService {
 
     /**
      * @param companyEntity
-     * @return void
+     * @return CompanyEntity
      */
     CompanyEntity save(CompanyEntity companyEntity);
 }
