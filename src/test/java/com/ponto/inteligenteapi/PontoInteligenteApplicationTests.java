@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class ApplicationTests {
+public class PontoInteligenteApplicationTests {
 
 	@Test
 	public void contextLoads() {
