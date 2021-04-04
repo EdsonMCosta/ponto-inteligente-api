@@ -32,13 +32,28 @@ public class EmployeeEntity implements Serializable {
     public EmployeeEntity() {
     }
 
+    public EmployeeEntity(String name, String email, String password, String cpf, ProfileEnum profile, Date creationDate, Date updateDate) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.cpf = cpf;
+        this.profile = profile;
+        this.creationDate = creationDate;
+        this.updateDate = updateDate;
+    }
+
+    public static EmployeeEntity of(final String name, final String email, final String password, final String cpf, final ProfileEnum profile,
+                                    final Date creationDate, final Date updateDate) {
+        return new EmployeeEntity(name, email, password, cpf, profile, creationDate, updateDate);
+    }
+
+    //TODO: Search why id are creating 2 by 2
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     public Long getId() {
         return id;
     }
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
     public void setId(Long id) {
         this.id = id;
     }
@@ -79,7 +94,7 @@ public class EmployeeEntity implements Serializable {
         this.cpf = cpf;
     }
 
-    @Column(name = "valueHour", nullable = false)
+    @Column(name = "valueHour", nullable = true)
     public BigDecimal getValueHour() {
         return valueHour;
     }

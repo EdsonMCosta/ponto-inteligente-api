@@ -21,8 +21,20 @@ public class CompanyEntity implements Serializable {
     public CompanyEntity() {
     }
 
+    public CompanyEntity(String companyName, String cnpj, Date creationDate, Date updateDate) {
+        this.companyName = companyName;
+        this.cnpj = cnpj;
+        this.creationDate = creationDate;
+        this.updateDate = updateDate;
+    }
+
+    public static CompanyEntity of(final String companyName, final String cnpj,
+                                   final Date creationDate, final Date updateDate) {
+        return new CompanyEntity(companyName, cnpj, new Date(), new Date());
+    }
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     public Long getId() {
         return id;
     }
@@ -77,12 +89,12 @@ public class CompanyEntity implements Serializable {
     }
 
     @PreUpdate
-    public void preUpdate(){
+    public void preUpdate() {
         updateDate = new Date();
     }
 
     @PrePersist
-    public void prePersist(){
+    public void prePersist() {
         final Date atual = new Date();
         creationDate = atual;
         updateDate = atual;

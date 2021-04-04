@@ -95,7 +95,6 @@ public class EmployeeRepositoryTest {
 
     private EmployeeEntity obtainDataOfAEmployee(CompanyEntity companyEntity) throws NoSuchAlgorithmException {
         EmployeeEntity employeeEntity = new EmployeeEntity();
-        employeeEntity.setId(1L);
         employeeEntity.setName("Jack of All Trade");
         employeeEntity.setProfile(ProfileEnum.USER_ROLE);
         employeeEntity.setPassword(PasswordUtils.generateBCrypt("123456"));
