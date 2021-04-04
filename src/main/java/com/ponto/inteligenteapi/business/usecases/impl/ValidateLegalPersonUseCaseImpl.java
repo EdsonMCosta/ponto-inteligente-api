@@ -26,9 +26,10 @@ public class ValidateLegalPersonUseCaseImpl implements ValidateLegalPersonUseCas
     private final EmployeeService employeeService;
 
     @Override
-    public void validateDataForLegalPerson(LegalPersonRequestDTO requestDTO, BindingResult result) {
+    public void validate(LegalPersonRequestDTO requestDTO, BindingResult result) {
         validateIfCompanyAlreadyExists(requestDTO, result);
         validateIfEmployeeAlreadyExistsByCPF(requestDTO, result);
+        validateIfEmployeeAlreadyExistsByEmail(requestDTO, result);
 
     }
 

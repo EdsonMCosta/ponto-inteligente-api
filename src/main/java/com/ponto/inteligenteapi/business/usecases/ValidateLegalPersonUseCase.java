@@ -18,5 +18,5 @@ public interface ValidateLegalPersonUseCase {
      * @param requestDTO
      * @param result
      */
-    void validateDataForLegalPerson(LegalPersonRequestDTO requestDTO, BindingResult result);
+    void validate(LegalPersonRequestDTO requestDTO, BindingResult result);
 }

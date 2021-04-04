@@ -2,6 +2,9 @@ package com.ponto.inteligenteapi.entrypoints.controllers.impl;
 
 import com.ponto.inteligenteapi.business.services.CompanyService;
 import com.ponto.inteligenteapi.business.services.EmployeeService;
+import com.ponto.inteligenteapi.business.usecases.CreateNewCompanyFromDTOUseCase;
+import com.ponto.inteligenteapi.business.usecases.ValidateLegalPersonUseCase;
+import com.ponto.inteligenteapi.dataproviders.entities.CompanyEntity;
 import com.ponto.inteligenteapi.entrypoints.controllers.LegalPersonController;
 import com.ponto.inteligenteapi.entrypoints.dtos.requests.LegalPersonRequestDTO;
 import com.ponto.inteligenteapi.entrypoints.dtos.responses.Response;
@@ -32,8 +35,10 @@ public class LegalPersonControllerImpl implements LegalPersonController {
 
     private static final Logger log = LoggerFactory.getLogger(LegalPersonControllerImpl.class);
 
-    private final EmployeeService employeeService;
+    private final ValidateLegalPersonUseCase validateLegalPersonUseCase;
+    private final CreateNewCompanyFromDTOUseCase createNewCompanyFromDTOUseCase;
     private final CompanyService companyService;
+    private final EmployeeService employeeService;
 
     @Override
     @PostMapping(value = "/register", consumes = APPLICATION_JSON_VALUE)
@@ -42,12 +47,18 @@ public class LegalPersonControllerImpl implements LegalPersonController {
 
         log.info("Registering new Legal Person: {}", requestDTO.toString());
 
+        validateLegalPersonUseCase.validate(requestDTO, result);
+        final CompanyEntity companyEntity = createNewCompanyFromDTOUseCase.create(requestDTO);
+
         final Response<LegalPersonRequestDTO> dtoResponse = new Response<>();
 
         if (result.hasErrors()) {
             result.getAllErrors().forEach(error -> dtoResponse.getErrors().add(error.getDefaultMessage()));
             return ResponseEntity.badRequest().body(dtoResponse);
         }
+
+        companyService.save(companyEntity);
+        
 
         return ResponseEntity
                 .created(URI.create(requestDTO.getName()))
