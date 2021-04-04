@@ -1,4 +1,4 @@
-package com.ponto.inteligenteapi.entrypoints.responses;
+package com.ponto.inteligenteapi.entrypoints.dtos.responses;
 
 import java.util.ArrayList;
 import java.util.List;
