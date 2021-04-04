@@ -47,13 +47,13 @@ public class EmployeeEntity implements Serializable {
         return new EmployeeEntity(name, email, password, cpf, profile, creationDate, updateDate);
     }
 
+    //TODO: Search why id are creating 2 by 2
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     public Long getId() {
         return id;
     }
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
     public void setId(Long id) {
         this.id = id;
     }
