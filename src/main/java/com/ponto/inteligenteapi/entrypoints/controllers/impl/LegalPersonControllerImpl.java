@@ -2,9 +2,9 @@ package com.ponto.inteligenteapi.entrypoints.controllers.impl;
 
 import com.ponto.inteligenteapi.business.services.CompanyService;
 import com.ponto.inteligenteapi.business.services.EmployeeService;
-import com.ponto.inteligenteapi.business.usecases.CreateNewCompanyFromDTOUseCase;
 import com.ponto.inteligenteapi.business.usecases.ValidateLegalPersonUseCase;
 import com.ponto.inteligenteapi.dataproviders.entities.CompanyEntity;
+import com.ponto.inteligenteapi.dataproviders.entities.EmployeeEntity;
 import com.ponto.inteligenteapi.entrypoints.controllers.LegalPersonController;
 import com.ponto.inteligenteapi.entrypoints.dtos.requests.LegalPersonRequestDTO;
 import com.ponto.inteligenteapi.entrypoints.dtos.responses.Response;
@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 
+import static com.ponto.inteligenteapi.dataproviders.converter.Converter.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
@@ -36,7 +37,6 @@ public class LegalPersonControllerImpl implements LegalPersonController {
     private static final Logger log = LoggerFactory.getLogger(LegalPersonControllerImpl.class);
 
     private final ValidateLegalPersonUseCase validateLegalPersonUseCase;
-    private final CreateNewCompanyFromDTOUseCase createNewCompanyFromDTOUseCase;
     private final CompanyService companyService;
     private final EmployeeService employeeService;
 
@@ -48,7 +48,8 @@ public class LegalPersonControllerImpl implements LegalPersonController {
         log.info("Registering new Legal Person: {}", requestDTO.toString());
 
         validateLegalPersonUseCase.validate(requestDTO, result);
-        final CompanyEntity companyEntity = createNewCompanyFromDTOUseCase.create(requestDTO);
+        final CompanyEntity companyEntity = convertCompanyFromDTO(requestDTO);
+        final EmployeeEntity employeeEntity = convertEmployeeFromDTO(requestDTO);
 
         final Response<LegalPersonRequestDTO> dtoResponse = new Response<>();
 
@@ -58,10 +59,14 @@ public class LegalPersonControllerImpl implements LegalPersonController {
         }
 
         companyService.save(companyEntity);
-        
+
+        employeeEntity.setCompany(companyEntity);
+        employeeService.save(employeeEntity);
+
+        dtoResponse.setData(convertToDTO(employeeEntity));
 
         return ResponseEntity
-                .created(URI.create(requestDTO.getName()))
+                .created(URI.create(dtoResponse.getData().getCompanyName()))
                 .build();
     }
 }

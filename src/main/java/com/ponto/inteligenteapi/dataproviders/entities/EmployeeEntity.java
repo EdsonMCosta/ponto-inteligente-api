@@ -32,6 +32,21 @@ public class EmployeeEntity implements Serializable {
     public EmployeeEntity() {
     }
 
+    public EmployeeEntity(String name, String email, String password, String cpf, ProfileEnum profile, Date creationDate, Date updateDate) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.cpf = cpf;
+        this.profile = profile;
+        this.creationDate = creationDate;
+        this.updateDate = updateDate;
+    }
+
+    public static EmployeeEntity of(final String name, final String email, final String password, final String cpf, final ProfileEnum profile,
+                                    final Date creationDate, final Date updateDate) {
+        return new EmployeeEntity(name, email, password, cpf, profile, creationDate, updateDate);
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
