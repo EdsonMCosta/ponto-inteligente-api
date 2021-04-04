@@ -3,14 +3,11 @@ package com.ponto.inteligenteapi.business.usecases.impl;
 import com.ponto.inteligenteapi.business.services.CompanyService;
 import com.ponto.inteligenteapi.business.services.EmployeeService;
 import com.ponto.inteligenteapi.business.usecases.ValidateLegalPersonUseCase;
-import com.ponto.inteligenteapi.dataproviders.entities.CompanyEntity;
 import com.ponto.inteligenteapi.entrypoints.dtos.requests.LegalPersonRequestDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * ValidateLegalPersonUseCaseImpl
@@ -49,12 +46,5 @@ public class ValidateLegalPersonUseCaseImpl implements ValidateLegalPersonUseCas
         this.employeeService.searchByCPF(requestDTO.getEmail())
                 .ifPresent(employeeEntity ->
                         result.addError(new ObjectError("employee", "Employee already exists by E-mail.")));
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    private static class CompanyAlreadyExistsException extends RuntimeException {
-        public CompanyAlreadyExistsException(String message) {
-            super(message);
-        }
     }
 }

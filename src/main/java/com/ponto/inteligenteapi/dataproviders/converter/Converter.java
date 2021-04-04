@@ -18,7 +18,7 @@ public class Converter {
 
     public static CompanyEntity convertCompanyFromDTO(LegalPersonRequestDTO requestDTO) {
         return CompanyEntity.of(
-                requestDTO.getCompanyName(),
+                requestDTO.getCompanyName().toUpperCase(),
                 requestDTO.getCnpj(),
                 new Date(),
                 new Date());
@@ -26,7 +26,7 @@ public class Converter {
 
     public static EmployeeEntity convertEmployeeFromDTO(LegalPersonRequestDTO requestDTO) {
         return EmployeeEntity.of(
-                requestDTO.getName(),
+                requestDTO.getName().toUpperCase(),
                 requestDTO.getEmail(),
                 PasswordUtils.generateBCrypt(requestDTO.getPassword()),
                 requestDTO.getCpf(),

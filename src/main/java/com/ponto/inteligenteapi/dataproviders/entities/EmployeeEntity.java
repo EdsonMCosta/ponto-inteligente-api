@@ -94,7 +94,7 @@ public class EmployeeEntity implements Serializable {
         this.cpf = cpf;
     }
 
-    @Column(name = "valueHour", nullable = false)
+    @Column(name = "valueHour", nullable = true)
     public BigDecimal getValueHour() {
         return valueHour;
     }

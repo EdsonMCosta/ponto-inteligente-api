@@ -11,12 +11,12 @@ import com.ponto.inteligenteapi.entrypoints.dtos.responses.Response;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 
 import static com.ponto.inteligenteapi.dataproviders.converter.Converter.*;
@@ -41,6 +41,7 @@ public class LegalPersonControllerImpl implements LegalPersonController {
     private final EmployeeService employeeService;
 
     @Override
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/register", consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<LegalPersonRequestDTO>> register(@Valid @RequestBody LegalPersonRequestDTO requestDTO,
                                                                     BindingResult result) throws NoSuchAlgorithmException {
@@ -66,7 +67,7 @@ public class LegalPersonControllerImpl implements LegalPersonController {
         dtoResponse.setData(convertToDTO(employeeEntity));
 
         return ResponseEntity
-                .created(URI.create(dtoResponse.getData().getCompanyName()))
-                .build();
+                .status(HttpStatus.CREATED)
+                .body(dtoResponse);
     }
 }
