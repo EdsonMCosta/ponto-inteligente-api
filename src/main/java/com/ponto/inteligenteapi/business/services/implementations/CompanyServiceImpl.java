@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.Optional;
+
 /**
  * CompanyServiceImpl
  *
@@ -21,9 +23,8 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
 
     @Override
-    public CompanyEntity findByCNPJ(String cnpj) {
-        return companyRepository.findByCnpj(cnpj)
-                .orElseThrow(() -> new InvalidCNPJException("Invalid CNPJ."));
+    public Optional<CompanyEntity> findByCNPJ(String cnpj) {
+        return companyRepository.findByCnpj(cnpj);
     }
 
     @Override

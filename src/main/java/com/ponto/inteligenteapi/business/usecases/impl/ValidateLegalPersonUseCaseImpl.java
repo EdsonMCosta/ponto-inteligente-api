@@ -34,10 +34,9 @@ public class ValidateLegalPersonUseCaseImpl implements ValidateLegalPersonUseCas
     }
 
     private void validateIfCompanyAlreadyExists(LegalPersonRequestDTO requestDTO, BindingResult result) {
-        final CompanyEntity byCNPJ = this.companyService.findByCNPJ(requestDTO.getCnpj());
-        if (!(byCNPJ == null)) {
-            throw new CompanyAlreadyExistsException("Company already registered.");
-        }
+        this.companyService.findByCNPJ(requestDTO.getCnpj())
+                .ifPresent(companyEntity ->
+                        result.addError(new ObjectError("company", "Company already exists.")));
     }
 
     private void validateIfEmployeeAlreadyExistsByCPF(LegalPersonRequestDTO requestDTO, BindingResult result) {

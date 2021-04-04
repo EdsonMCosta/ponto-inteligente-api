@@ -11,8 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import java.util.Optional;
+
+import static org.junit.Assert.*;
 
 /**
  * CompanyServiceTest
@@ -45,9 +46,9 @@ public class CompanyServiceTest {
 
     @Test
     public void testFindCompanyByCNPJ() {
-        final CompanyEntity byCNPJ = this.companyService.findByCNPJ(CNPJ);
+        final Optional<CompanyEntity> byCNPJ = this.companyService.findByCNPJ(CNPJ);
 
-        assertEquals(CNPJ, byCNPJ.getCnpj());
+        assertTrue(byCNPJ.isPresent());
     }
 
     @Test
